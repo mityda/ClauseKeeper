@@ -53,6 +53,16 @@ label.inline{display:inline-block;margin-right:16px;font-weight:400}
 .plan .price span{font-size:1rem;color:var(--muted)}
 .plan ul{list-style:none;padding:0}
 .plan li{padding:5px 0;border-bottom:1px solid var(--line)}
+.billing-options{display:grid;gap:10px;margin:16px 0}
+.billing-option{display:flex;gap:10px;align-items:flex-start;background:#0c0f1a;border:1px solid var(--line);border-radius:10px;padding:13px;cursor:pointer}
+.billing-option:has(input:checked){border-color:var(--accent);box-shadow:0 0 0 1px var(--accent)}
+.billing-option-featured{background:linear-gradient(135deg,#111a30,#17213a)}
+.billing-option-compact{padding:10px 13px}
+.billing-copy{display:grid;gap:2px;width:100%}
+.billing-head{display:flex;justify-content:space-between;gap:10px;align-items:center}
+.save-badge{font-size:.72rem;padding:2px 8px;border-radius:20px;background:#173d2b;color:var(--ok);white-space:nowrap}
+.billing-price{font-size:1.45rem;font-weight:800}
+.billing-price span{font-size:.9rem;color:var(--muted)}
 .linkbtn{background:none;border:none;color:var(--muted);cursor:pointer;text-decoration:underline;margin-top:8px;padding:0}
 .ok{color:var(--ok);font-weight:600}
 .doc-list{list-style:none;padding:0;font-size:1.1rem}

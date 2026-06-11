@@ -16,6 +16,8 @@ def client(monkeypatch):
     monkeypatch.delenv("POLICYFRESH_DB", raising=False)
     monkeypatch.delenv("STRIPE_SECRET_KEY", raising=False)
     monkeypatch.delenv("STRIPE_PRICE_ID", raising=False)
+    monkeypatch.delenv("STRIPE_PRICE_ID_MONTHLY", raising=False)
+    monkeypatch.delenv("STRIPE_PRICE_ID_ANNUAL", raising=False)
     monkeypatch.delenv("STRIPE_WEBHOOK_SECRET", raising=False)
     monkeypatch.setenv("APP_SECRET_KEY", "test-secret")
     monkeypatch.setenv("APP_BASE_URL", "http://testserver")

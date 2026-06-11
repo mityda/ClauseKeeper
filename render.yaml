@@ -14,5 +14,7 @@ services:
       # Add real Stripe keys here (or in the Render dashboard) when going paid:
       # - key: STRIPE_SECRET_KEY
       #   sync: false
-      # - key: STRIPE_PRICE_ID
+      # - key: STRIPE_PRICE_ID_MONTHLY
+      #   sync: false
+      # - key: STRIPE_PRICE_ID_ANNUAL
       #   sync: false

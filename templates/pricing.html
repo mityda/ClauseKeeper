@@ -17,7 +17,7 @@
     </div>
     <div class="plan featured">
       <h3>Always-Current</h3>
-      <div class="price">$19<span>/mo</span></div>
+      <div class="price">$149<span>/yr</span></div>
       <ul>
         <li>✅ Privacy Policy, ToS, Cookie & AI-Disclosure docs</li>
         <li>✅ Jurisdiction-aware conditional clauses</li>
@@ -33,10 +33,31 @@
         <p class="fine"><a href="/logout">Log out</a></p>
       {% else %}
         <form method="post" action="/subscribe">
+          <div class="billing-options" role="radiogroup" aria-label="Choose billing plan">
+            <label class="billing-option billing-option-featured">
+              <input type="radio" name="plan" value="annual" checked>
+              <span class="billing-copy">
+                <span class="billing-head">
+                  <strong>Annual</strong>
+                  <span class="save-badge">Best Value · Save $79</span>
+                </span>
+                <span class="billing-price">$149<span>/yr</span></span>
+                <span class="fine">~$12.42/mo billed annually</span>
+              </span>
+            </label>
+            <label class="billing-option billing-option-compact">
+              <input type="radio" name="plan" value="monthly">
+              <span class="billing-copy">
+                <span class="billing-head"><strong>Monthly</strong></span>
+                <span class="billing-price">$19<span>/mo</span></span>
+                <span class="fine">Pay month to month</span>
+              </span>
+            </label>
+          </div>
           <label class="auth-email">Email
             <input type="email" name="email" placeholder="you@example.com" required>
           </label>
-          <button class="btn btn-primary" type="submit">Subscribe — $19/mo</button>
+          <button class="btn btn-primary" type="submit">Subscribe to Always-Current</button>
         </form>
         {% if stripe_enabled %}
           <p class="fine">🔒 Secure checkout via Stripe. Already a customer? <a href="/login">Log in / manage billing →</a></p>

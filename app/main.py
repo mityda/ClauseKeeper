@@ -156,11 +156,23 @@ def logout():
     return resp
 
 
+def _normalize_plan(plan: str) -> str:
+    """Return a safe billing plan value for checkout/dev subscription flows."""
+    return "monthly" if (plan or "").strip().lower() == "monthly" else "annual"
+
+
+def _stripe_price_id_for_plan(plan: str) -> str | None:
+    if plan == "monthly":
+        return os.environ.get("STRIPE_PRICE_ID_MONTHLY") or os.environ.get("STRIPE_PRICE_ID")
+    return os.environ.get("STRIPE_PRICE_ID_ANNUAL")
+
+
 @app.post("/subscribe")
-def subscribe(request: Request, email: str = Form("")):
+def subscribe(request: Request, email: str = Form(""), plan: str = Form("annual")):
     """Create a Stripe Checkout Session (subscription). Falls back to a dev stub
     when STRIPE_SECRET_KEY is absent so local dev stays fully testable."""
     stripe = _stripe()
+    plan = _normalize_plan(plan)
 
     if stripe is None:
         # ----- DEV STUB: no Stripe keys. Mark a (possibly anonymous) user subscribed. -----
@@ -175,9 +187,10 @@ def subscribe(request: Request, email: str = Form("")):
         return resp
 
     # ----- REAL STRIPE CHECKOUT -----
-    price_id = os.environ.get("STRIPE_PRICE_ID")
+    price_id = _stripe_price_id_for_plan(plan)
     if not price_id:
-        raise HTTPException(status_code=500, detail="STRIPE_PRICE_ID not configured")
+        env_name = "STRIPE_PRICE_ID_MONTHLY" if plan == "monthly" else "STRIPE_PRICE_ID_ANNUAL"
+        raise HTTPException(status_code=500, detail=f"{env_name} not configured")
 
     kwargs = dict(
         mode="subscription",
