@@ -1,0 +1,18 @@
+# Render.com deploy blueprint for ClauseKeeper.
+# Free tier works for launch. Push this repo to GitHub, then on Render:
+# New > Blueprint > connect the repo > it reads this file.
+services:
+  - type: web
+    name: clausekeeper
+    runtime: python
+    plan: free
+    buildCommand: "pip install -r requirements.txt"
+    startCommand: "uvicorn app.main:app --host 0.0.0.0 --port $PORT"
+    envVars:
+      - key: PYTHON_VERSION
+        value: "3.11.9"
+      # Add real Stripe keys here (or in the Render dashboard) when going paid:
+      # - key: STRIPE_SECRET_KEY
+      #   sync: false
+      # - key: STRIPE_PRICE_ID
+      #   sync: false

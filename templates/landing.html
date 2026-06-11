@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block title %}ClauseKeeper — Always-current legal docs{% endblock %}
+{% block content %}
+<section class="hero">
+  <h1>Is your policy <span class="accent">2026-compliant</span>?</h1>
+  <p class="lede">Indie businesses need privacy policies, ToS, cookie & AI-disclosure docs that keep up with GDPR, CCPA/CPRA, and the new 2026 AI rules. Lawyers are pricey; templates go stale. ClauseKeeper keeps them current — for $19/mo.</p>
+  <div class="cta-row">
+    <a class="btn btn-primary" href="/scan">Run the free scanner →</a>
+    <a class="btn btn-ghost" href="/pricing">See pricing</a>
+  </div>
+  <p class="fine">Clause library version <strong>{{ clause_version }}</strong>{% if subscribed %} · ✅ You're subscribed{% endif %}</p>
+</section>
+
+<section class="features">
+  <div class="card">
+    <h3>1 · Free compliance scanner</h3>
+    <p>Paste your policy text or a URL. Get a 0–100 score and a checklist of missing or stale clauses — GDPR, CCPA/CPRA, cookies, retention, <strong>AI-disclosure</strong>, COPPA, and more.</p>
+  </div>
+  <div class="card">
+    <h3>2 · One-click doc generator</h3>
+    <p>Answer a short form → get a Privacy Policy, Terms of Service, Cookie Policy and a 2026 AI-Disclosure addendum, with conditional clauses for your jurisdictions.</p>
+  </div>
+  <div class="card">
+    <h3>3 · Hosted, versioned, always-current</h3>
+    <p>Every doc gets a stable hosted URL, a "last updated" date, and a clause-version stamp. When laws change, the library bumps — that's the subscription.</p>
+  </div>
+</section>
+{% endblock %}

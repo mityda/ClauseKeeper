@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}ClauseKeeper{% endblock %}</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="/">⚖️ ClauseKeeper</a>
+    <nav>
+      <a href="/scan">Free Scanner</a>
+      <a href="/generate">Generate Docs</a>
+      <a href="/pricing">Pricing</a>
+      <a href="/login">Log in</a>
+    </nav>
+  </header>
+  <main>
+    {% block content %}{% endblock %}
+  </main>
+  <footer>
+    <p>ClauseKeeper — always-current legal & AI-disclosure docs for indie online businesses.</p>
+    <p class="fine">Generated documents are template-based and are <strong>not legal advice</strong>. Get a legal review before production use.</p>
+  </footer>
+</body>
+</html>

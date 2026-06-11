@@ -1,0 +1,7 @@
+.venv/
+__pycache__/
+*.pyc
+.env
+clausekeeper.db
+policyfresh.db
+.pytest_cache/

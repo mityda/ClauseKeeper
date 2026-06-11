@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% block title %}Pricing — ClauseKeeper{% endblock %}
+{% block content %}
+<section class="pricing">
+  <h1>Simple, recurring pricing</h1>
+  <div class="plans">
+    <div class="plan">
+      <h3>Free Scanner</h3>
+      <div class="price">$0</div>
+      <ul>
+        <li>✅ Unlimited compliance scans</li>
+        <li>✅ Full 0–100 scorecard</li>
+        <li>✅ Missing & stale clause detection</li>
+        <li>❌ Document generation</li>
+      </ul>
+      <a class="btn btn-ghost" href="/scan">Use the scanner</a>
+    </div>
+    <div class="plan featured">
+      <h3>Always-Current</h3>
+      <div class="price">$19<span>/mo</span></div>
+      <ul>
+        <li>✅ Privacy Policy, ToS, Cookie & AI-Disclosure docs</li>
+        <li>✅ Jurisdiction-aware conditional clauses</li>
+        <li>✅ Hosted policy URLs</li>
+        <li>✅ Auto-updated as laws change (clause-version stamp)</li>
+      </ul>
+      {% if subscribed %}
+        <p class="ok">✅ You're subscribed{% if user %} as {{ user.email }}{% endif %}.</p>
+        <a class="btn btn-primary" href="/generate">Generate docs →</a>
+        {% if stripe_enabled %}
+          <p class="fine"><a href="/portal">Manage billing →</a></p>
+        {% endif %}
+        <p class="fine"><a href="/logout">Log out</a></p>
+      {% else %}
+        <form method="post" action="/subscribe">
+          <label class="auth-email">Email
+            <input type="email" name="email" placeholder="you@example.com" required>
+          </label>
+          <button class="btn btn-primary" type="submit">Subscribe — $19/mo</button>
+        </form>
+        {% if stripe_enabled %}
+          <p class="fine">🔒 Secure checkout via Stripe. Already a customer? <a href="/login">Log in / manage billing →</a></p>
+        {% else %}
+          <p class="fine">⚠️ <strong>Dev mode: Stripe is not configured</strong>, so this flips a local per-user flag and logs you in. Set <code>STRIPE_SECRET_KEY</code> (and friends) to enable real Checkout. Returning dev user? <a href="/login">Log in →</a></p>
+        {% endif %}
+      {% endif %}
+    </div>
+  </div>
+</section>
+{% endblock %}

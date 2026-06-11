@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block title %}Log in — ClauseKeeper{% endblock %}
+{% block content %}
+<section class="auth">
+  <h1>Log in</h1>
+  {% if stripe_enabled %}
+    <p class="lede">Already a customer? Manage your subscription and billing in the Stripe Customer Portal.</p>
+    <a class="btn btn-primary" href="/portal">Open billing portal →</a>
+    <p class="fine">New here? <a href="/pricing">See pricing and subscribe →</a></p>
+  {% else %}
+    <p class="lede">Dev mode (no Stripe configured). Enter your email to log in.</p>
+    {% if error %}<p class="fine" style="color:#b00">{{ error }}</p>{% endif %}
+    <form method="post" action="/login" class="gen-form">
+      <label>Email
+        <input type="email" name="email" placeholder="you@example.com" required>
+      </label>
+      <button class="btn btn-primary" type="submit">Log in →</button>
+    </form>
+    <p class="fine">No account yet? <a href="/pricing">Subscribe first →</a></p>
+  {% endif %}
+</section>
+{% endblock %}

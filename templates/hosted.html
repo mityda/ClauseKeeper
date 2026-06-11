@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block title %}{{ policy.business_name }} — Policies — ClauseKeeper{% endblock %}
+{% block content %}
+<section>
+  <h1>{{ policy.business_name }} — Policy Set</h1>
+  <p class="fine">Hosted at <code>/p/{{ policy.id }}</code> · Created {{ policy.created_at }} · Clause version <strong>{{ policy.clause_version }}</strong></p>
+
+  <div class="alert info">⚠️ <strong>Not legal advice.</strong> {{ disclaimer }}</div>
+
+  <ul class="doc-list">
+    {% for key, d in policy.docs.items() %}
+    <li><a href="/p/{{ policy.id }}/{{ key }}">{{ d.title }} →</a></li>
+    {% endfor %}
+  </ul>
+
+  <h3>Clause changelog (why "always-current")</h3>
+  <ul class="changelog">
+    {% for ver, note in changelog %}
+    <li><strong>{{ ver }}</strong> — {{ note }}</li>
+    {% endfor %}
+  </ul>
+</section>
+{% endblock %}

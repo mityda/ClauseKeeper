@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% block title %}Free Compliance Scanner — ClauseKeeper{% endblock %}
+{% block content %}
+<section>
+  <h1>Free Compliance Scanner</h1>
+  <p class="lede">Paste your existing policy text, or give us a URL. We'll flag missing & stale clauses for 2026. 100% free, unlimited, no signup.</p>
+
+  {% if error %}<div class="alert">{{ error }}</div>{% endif %}
+
+  <form method="post" action="/scan" class="scan-form">
+    <div class="tabs">
+      <label><input type="radio" name="mode" value="text" checked> Paste text</label>
+      <label><input type="radio" name="mode" value="url"> Scan a URL</label>
+    </div>
+    <textarea name="policy_text" rows="8" placeholder="Paste your privacy policy / terms text here...">{{ submitted_text or "" }}</textarea>
+    <input type="text" name="url" placeholder="https://yoursite.com/privacy" value="{{ submitted_url or '' }}">
+    <button class="btn btn-primary" type="submit">Scan now →</button>
+  </form>
+</section>
+
+{% if result %}
+<section class="scorecard">
+  <div class="score-header grade-{{ result.grade }}">
+    <div class="score-num">{{ result.score_10 }}<span>/10</span></div>
+    <div class="score-meta">
+      <div class="grade">Grade {{ result.grade }} · {{ result.score_100 }}/100</div>
+      <div class="verdict">{{ result.verdict }}</div>
+      <div class="fine">Scanned {{ source }} · {{ result.word_count }} words ·
+        {{ result.counts.present }} present, {{ result.counts.needs_update }} stale,
+        {{ result.counts.missing }} missing</div>
+    </div>
+  </div>
+
+  {% for category, items in result.by_category.items() %}
+  <h3 class="cat">{{ category }}</h3>
+  <ul class="checklist">
+    {% for r in items %}
+    <li class="status-{{ r.status }}">
+      <span class="icon">{% if r.status == 'present' %}✅{% elif r.status == 'needs_update' %}⚠️{% else %}❌{% endif %}</span>
+      <div>
+        <strong>{{ r.label }}</strong>
+        <span class="badge">{% if r.status == 'present' %}Present{% elif r.status == 'needs_update' %}Needs update{% else %}Missing{% endif %}</span>
+        <p class="why">{{ r.why }}</p>
+        {% if r.status != 'present' %}<p class="fix">→ {{ r.fix }}</p>{% endif %}
+      </div>
+    </li>
+    {% endfor %}
+  </ul>
+  {% endfor %}
+
+  <div class="upsell">
+    <h3>Fix all of this in 2 minutes</h3>
+    <p>ClauseKeeper generates a complete, jurisdiction-aware document set — with the 2026 AI-disclosure language — and keeps it current. $19/mo.</p>
+    <a class="btn btn-primary" href="/pricing">Generate compliant docs →</a>
+  </div>
+</section>
+{% endif %}
+{% endblock %}

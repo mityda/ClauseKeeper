@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% block title %}Generate Docs — ClauseKeeper{% endblock %}
+{% block content %}
+<section>
+  <h1>Generate your policy set</h1>
+  <p class="lede">Answer a few questions. We'll build a Privacy Policy, Terms of Service, Cookie Policy, and a 2026 AI-Disclosure addendum with the right conditional clauses.</p>
+
+  <form method="post" action="/generate" class="gen-form">
+    <label>Business name
+      <input type="text" name="business_name" placeholder="Acme Apps LLC" required>
+    </label>
+    <label>Website
+      <input type="text" name="website" placeholder="https://acme.app" required>
+    </label>
+    <label>Contact / privacy email
+      <input type="email" name="contact_email" placeholder="privacy@acme.app" required>
+    </label>
+    <label>Data you collect (comma-separated)
+      <input type="text" name="data_collected" placeholder="Email address, Name, Usage data, Payment info">
+    </label>
+
+    <fieldset>
+      <legend>Which jurisdictions apply?</legend>
+      <label class="inline"><input type="checkbox" name="jurisdictions" value="eu"> EU (GDPR)</label>
+      <label class="inline"><input type="checkbox" name="jurisdictions" value="uk"> UK</label>
+      <label class="inline"><input type="checkbox" name="jurisdictions" value="ca"> California (CCPA/CPRA)</label>
+      <label class="inline"><input type="checkbox" name="jurisdictions" value="us"> Other US</label>
+    </fieldset>
+
+    <fieldset>
+      <legend>Do you use cookies / tracking?</legend>
+      <label class="inline"><input type="radio" name="uses_cookies" value="yes" checked> Yes</label>
+      <label class="inline"><input type="radio" name="uses_cookies" value="no"> No</label>
+    </fieldset>
+
+    <fieldset>
+      <legend>Do you use AI / automated decision-making? (2026 wedge)</legend>
+      <label class="inline"><input type="radio" name="uses_ai" value="yes" checked> Yes</label>
+      <label class="inline"><input type="radio" name="uses_ai" value="no"> No</label>
+    </fieldset>
+
+    <button class="btn btn-primary" type="submit">Generate documents →</button>
+  </form>
+</section>
+{% endblock %}
