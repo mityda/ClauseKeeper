@@ -21,6 +21,7 @@ Routes:
   POST /api/scan         JSON scanner endpoint (for curl/automation tests)
 """
 import os
+from datetime import date
 
 import httpx
 from fastapi import FastAPI, Form, Request, HTTPException
@@ -40,6 +41,11 @@ app = FastAPI(title="ClauseKeeper", version="0.1.0")
 app.mount("/static", StaticFiles(directory=os.path.join(BASE_DIR, "static")), name="static")
 
 PLAN = "always-current-19"
+
+
+def _clause_last_updated() -> str:
+    """Human-friendly date for the current clause library freshness signal."""
+    return date.today().strftime("%B %d, %Y")
 
 
 @app.on_event("startup")
@@ -79,6 +85,7 @@ def landing(request: Request):
         "subscribed": bool(user and user["subscribed"]),
         "user": user,
         "clause_version": CLAUSE_LIBRARY_VERSION,
+        "clause_last_updated": _clause_last_updated(),
     })
 
 
@@ -117,6 +124,15 @@ def pricing(request: Request):
         "subscribed": bool(user and user["subscribed"]),
         "user": user,
         "stripe_enabled": auth.stripe_enabled(),
+    })
+
+
+@app.get("/about", response_class=HTMLResponse)
+def about(request: Request):
+    user = _user(request)
+    return templates.TemplateResponse(request, "about.html", {
+        "subscribed": bool(user and user["subscribed"]),
+        "user": user,
     })
 
 
@@ -347,6 +363,7 @@ def hosted_bundle(request: Request, pid: str):
     return templates.TemplateResponse(request, "hosted.html", {
         "policy": policy, "disclaimer": DISCLAIMER,
         "changelog": CLAUSE_CHANGELOG,
+        "documents": policy["docs"],
     })
 
 

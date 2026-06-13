@@ -1,22 +1,37 @@
 {% extends "base.html" %}
 {% block title %}Log in — ClauseKeeper{% endblock %}
 {% block content %}
-<section class="auth">
-  <h1>Log in</h1>
-  {% if stripe_enabled %}
-    <p class="lede">Already a customer? Manage your subscription and billing in the Stripe Customer Portal.</p>
-    <a class="btn btn-primary" href="/portal">Open billing portal →</a>
-    <p class="fine">New here? <a href="/pricing">See pricing and subscribe →</a></p>
-  {% else %}
-    <p class="lede">Dev mode (no Stripe configured). Enter your email to log in.</p>
-    {% if error %}<p class="fine" style="color:#b00">{{ error }}</p>{% endif %}
-    <form method="post" action="/login" class="gen-form">
-      <label>Email
-        <input type="email" name="email" placeholder="you@example.com" required>
-      </label>
-      <button class="btn btn-primary" type="submit">Log in →</button>
-    </form>
-    <p class="fine">No account yet? <a href="/pricing">Subscribe first →</a></p>
-  {% endif %}
+<section class="auth-gate">
+  <div class="blur-stage" aria-hidden="true">
+    <div class="teal-orb orb-one"></div>
+    <div class="teal-orb orb-two"></div>
+    <div class="doc-silhouette doc-one"><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div></div>
+    <div class="doc-silhouette doc-two"><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div></div>
+    <div class="doc-silhouette doc-three"><div class="line"></div><div class="line"></div><div class="line"></div></div>
+    <div class="benefit-teaser">
+      <strong>What you'll get</strong>
+      <p class="fine">A hosted Privacy Policy, Terms of Service, Cookie Policy and AI disclosure set — updated as laws change.</p>
+    </div>
+  </div>
+
+  <div class="auth-card">
+    <img class="brand-mark" src="/static/logo-icon.svg" alt="" width="48" height="48">
+    <h1>Already using ClauseKeeper?</h1>
+    {% if stripe_enabled %}
+      <p class="lede">Sign in through your billing portal to manage your subscription and return to your documents.</p>
+      <a class="btn btn-primary" href="/portal">Sign In →</a>
+    {% else %}
+      <p class="fine">Dev mode sign in. Enter your email to access your local account.</p>
+      {% if error %}<p class="alert">{{ error }}</p>{% endif %}
+      <form method="post" action="/login" class="gen-form">
+        <label>Email
+          <input type="email" name="email" placeholder="you@example.com" required>
+        </label>
+        <button class="btn btn-primary" type="submit">Sign In →</button>
+      </form>
+    {% endif %}
+    <div class="or-divider"><span>or</span></div>
+    <a class="btn btn-ghost" href="/pricing">Start free / Subscribe →</a>
+  </div>
 </section>
 {% endblock %}

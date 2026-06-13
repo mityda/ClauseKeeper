@@ -1,0 +1,28 @@
+<svg width="512" height="512" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="teal" x1="150" y1="150" x2="380" y2="400" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#2DD4BF"/>
+      <stop offset="1" stop-color="#14B8A6"/>
+    </linearGradient>
+  </defs>
+
+  <!-- white rounded app-icon background with subtle edge for white sites -->
+  <rect x="2" y="2" width="508" height="508" rx="112" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="3"/>
+
+  <!-- shield (navy) — vertical axis at x=256 -->
+  <path d="M256 96 L386 142 V268 C386 350 326 398 256 424 C186 398 126 350 126 268 V142 Z"
+        fill="none" stroke="#0B2237" stroke-width="20" stroke-linejoin="round"/>
+
+  <!-- document lines (clauses) — block symmetric about x=256, vertically centered -->
+  <g stroke="#0B2237" stroke-width="16" stroke-linecap="round" opacity="0.92">
+    <line x1="196" y1="206" x2="316" y2="206"/>
+    <line x1="196" y1="246" x2="316" y2="246"/>
+    <line x1="196" y1="286" x2="316" y2="286"/>
+  </g>
+
+  <!-- checkmark seal (teal) overlapping bottom-right of the line block, with white separator ring -->
+  <circle cx="320" cy="304" r="62" fill="#FFFFFF"/>
+  <circle cx="320" cy="304" r="56" fill="url(#teal)"/>
+  <path d="M294 304 L312 324 L348 284" fill="none" stroke="#FFFFFF" stroke-width="18"
+        stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

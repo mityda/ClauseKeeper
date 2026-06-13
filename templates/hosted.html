@@ -1,17 +1,35 @@
 {% extends "base.html" %}
 {% block title %}{{ policy.business_name }} — Policies — ClauseKeeper{% endblock %}
 {% block content %}
-<section>
+<section id="bundle-export">
+  <p class="eyebrow">Hosted policy bundle</p>
   <h1>{{ policy.business_name }} — Policy Set</h1>
   <p class="fine">Hosted at <code>/p/{{ policy.id }}</code> · Created {{ policy.created_at }} · Clause version <strong>{{ policy.clause_version }}</strong></p>
 
   <div class="alert info">⚠️ <strong>Not legal advice.</strong> {{ disclaimer }}</div>
+  <div class="doc-actions">
+    <button class="btn btn-ghost btn-small" type="button" onclick="ckCopyHtml('bundle-export')">Copy HTML</button>
+    <button class="btn btn-ghost btn-small" type="button" onclick="ckDownloadHtml('bundle-export','clausekeeper-{{ policy.id }}-bundle.html')">Download .html</button>
+    <button class="btn btn-primary btn-small" type="button" onclick="ckDownloadPdf()">Download PDF</button>
+  </div>
 
-  <ul class="doc-list">
-    {% for key, d in policy.docs.items() %}
-    <li><a href="/p/{{ policy.id }}/{{ key }}">{{ d.title }} →</a></li>
+  <div class="doc-list">
+    {% for key, d in documents.items() %}
+    <article class="doc-card" id="doc-card-{{ key }}">
+      <h3><a href="/p/{{ policy.id }}/{{ key }}">{{ d.title }} →</a></h3>
+      <p class="fine">Light, branded generated document with a prominent legal disclaimer.</p>
+      <div class="doc-actions">
+        <button class="btn btn-ghost btn-small" type="button" onclick="ckCopyHtml('doc-export-{{ key }}')">Copy HTML</button>
+        <button class="btn btn-ghost btn-small" type="button" onclick="ckDownloadHtml('doc-export-{{ key }}','clausekeeper-{{ policy.id }}-{{ key }}.html')">Download .html</button>
+        <button class="btn btn-primary btn-small" type="button" onclick="ckDownloadPdf()">Download PDF</button>
+      </div>
+      <div id="doc-export-{{ key }}" class="hidden-export">
+        <div class="alert info">⚠️ <strong>Not legal advice.</strong> {{ disclaimer }}</div>
+        <article class="doc-body">{{ d.body | safe }}</article>
+      </div>
+    </article>
     {% endfor %}
-  </ul>
+  </div>
 
   <h3>Clause changelog (why "always-current")</h3>
   <ul class="changelog">

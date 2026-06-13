@@ -2,31 +2,36 @@
 {% block title %}Pricing — ClauseKeeper{% endblock %}
 {% block content %}
 <section class="pricing">
-  <h1>Simple, recurring pricing</h1>
+  <p class="eyebrow">Pricing</p>
+  <h1>Start free. Upgrade when you want the fix kept current.</h1>
+  <p class="lede pricing-sub">Scan for gaps at no cost, then generate and host always-current legal documents when you're ready.</p>
   <div class="plans">
     <div class="plan">
       <h3>Free Scanner</h3>
       <div class="price">$0</div>
+      <p class="lede">See what your site is missing in 30 seconds — free, no signup.</p>
       <ul>
-        <li>✅ Unlimited compliance scans</li>
-        <li>✅ Full 0–100 scorecard</li>
-        <li>✅ Missing & stale clause detection</li>
-        <li>❌ Document generation</li>
+        <li>✓ Unlimited compliance scans</li>
+        <li>✓ Full 0–100 scorecard</li>
+        <li>✓ Missing and stale clause detection</li>
+        <li>✓ No card required</li>
+        <li>Document generation available on paid plans</li>
       </ul>
-      <a class="btn btn-ghost" href="/scan">Use the scanner</a>
+      <a class="btn btn-primary" href="/scan">Run your free scan →</a>
     </div>
     <div class="plan featured">
       <h3>Always-Current</h3>
-      <div class="price">$149<span>/yr</span></div>
+      <div class="price">$12.42<span>/mo</span></div>
+      <p class="fine"><strong>Billed annually at $149/yr</strong></p>
       <ul>
-        <li>✅ Privacy Policy, ToS, Cookie & AI-Disclosure docs</li>
-        <li>✅ Jurisdiction-aware conditional clauses</li>
-        <li>✅ Hosted policy URLs</li>
-        <li>✅ Auto-updated as laws change (clause-version stamp)</li>
+        <li>✓ Privacy Policy, Terms of Service, Cookie Policy and AI-Disclosure documents</li>
+        <li>✓ Jurisdiction-aware conditional clauses</li>
+        <li>✓ Hosted policy URLs</li>
+        <li>✓ Updated as laws change with version tracking</li>
       </ul>
       {% if subscribed %}
-        <p class="ok">✅ You're subscribed{% if user %} as {{ user.email }}{% endif %}.</p>
-        <a class="btn btn-primary" href="/generate">Generate docs →</a>
+        <p class="ok">✓ You're subscribed{% if user %} as {{ user.email }}{% endif %}.</p>
+        <a class="btn btn-primary" href="/generate">Generate documents →</a>
         {% if stripe_enabled %}
           <p class="fine"><a href="/portal">Manage billing →</a></p>
         {% endif %}
@@ -39,10 +44,10 @@
               <span class="billing-copy">
                 <span class="billing-head">
                   <strong>Annual</strong>
-                  <span class="save-badge">Best Value · Save $79</span>
+                  <span class="save-badge">Best value — Save $79/yr</span>
                 </span>
-                <span class="billing-price">$149<span>/yr</span></span>
-                <span class="fine">~$12.42/mo billed annually</span>
+                <span class="billing-price">$12.42<span>/mo</span></span>
+                <span class="fine">Billed annually at $149/yr</span>
               </span>
             </label>
             <label class="billing-option billing-option-compact">
@@ -60,9 +65,9 @@
           <button class="btn btn-primary" type="submit">Subscribe to Always-Current</button>
         </form>
         {% if stripe_enabled %}
-          <p class="fine">🔒 Secure checkout via Stripe. Already a customer? <a href="/login">Log in / manage billing →</a></p>
+          <p class="fine">Secure checkout via Stripe. Already a customer? <a href="/login">Log in or manage billing →</a></p>
         {% else %}
-          <p class="fine">⚠️ <strong>Dev mode: Stripe is not configured</strong>, so this flips a local per-user flag and logs you in. Set <code>STRIPE_SECRET_KEY</code> (and friends) to enable real Checkout. Returning dev user? <a href="/login">Log in →</a></p>
+          <p class="fine"><strong>Dev mode: Stripe is not configured</strong>, so this flips a local per-user flag and logs you in. Set <code>STRIPE_SECRET_KEY</code> (and friends) to enable real Checkout. Returning dev user? <a href="/login">Log in →</a></p>
         {% endif %}
       {% endif %}
     </div>
