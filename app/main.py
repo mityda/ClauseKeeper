@@ -179,7 +179,7 @@ def badge_builder(request: Request, score: int = 92):
         "embed_code": (
             '<a href="https://clausekeeper.app/scan" aria-label="Scan your compliance with ClauseKeeper">'
             f'<img src="https://clausekeeper.app/badge.svg?score={score}" '
-            f'alt="ClauseKeeper compliance score: {score}/100, grade {grade}" width="240" height="70">'
+            f'alt="ClauseKeeper compliance score: {score}/100, grade {grade}" width="300" height="70">'
             '</a>'
         ),
     })
@@ -192,19 +192,19 @@ def badge_svg(score: int = 92, label: str = "Compliance Score"):
     grade = _badge_grade(score)
     color = _badge_color(grade)
     safe_label = (label or "Compliance Score").replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")[:42]
-    svg = f'''<svg xmlns="http://www.w3.org/2000/svg" width="240" height="70" viewBox="0 0 240 70" role="img" aria-label="ClauseKeeper {safe_label}: {score} out of 100, grade {grade}">
+    svg = f'''<svg xmlns="http://www.w3.org/2000/svg" width="300" height="70" viewBox="0 0 300 70" role="img" aria-label="ClauseKeeper {safe_label}: {score} out of 100, grade {grade}">
   <defs>
     <linearGradient id="g" x1="0" x2="1" y1="0" y2="1"><stop stop-color="#2DD4BF"/><stop offset="1" stop-color="#14B8A6"/></linearGradient>
     <filter id="s" x="-20%" y="-20%" width="140%" height="140%"><feDropShadow dx="0" dy="6" stdDeviation="6" flood-color="#0B2237" flood-opacity=".14"/></filter>
   </defs>
-  <rect x="2" y="2" width="236" height="66" rx="16" fill="#fff" stroke="#E2E8F0" filter="url(#s)"/>
+  <rect x="2" y="2" width="296" height="66" rx="16" fill="#fff" stroke="#E2E8F0" filter="url(#s)"/>
   <circle cx="36" cy="35" r="20" fill="url(#g)"/>
   <path d="M27 35.5l6 6 12-14" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
   <text x="66" y="26" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Arial,sans-serif" font-size="13" font-weight="700" fill="#5B7488">ClauseKeeper</text>
   <text x="66" y="45" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Arial,sans-serif" font-size="16" font-weight="800" fill="#0B2237">{safe_label}</text>
-  <rect x="178" y="16" width="46" height="38" rx="12" fill="{color}"/>
-  <text x="201" y="32" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Arial,sans-serif" font-size="15" font-weight="900" fill="#fff">{score}</text>
-  <text x="201" y="46" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Arial,sans-serif" font-size="10" font-weight="800" fill="#fff">Grade {grade}</text>
+  <rect x="232" y="12" width="54" height="46" rx="13" fill="{color}"/>
+  <text x="259" y="34" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Arial,sans-serif" font-size="16" font-weight="900" fill="#fff">{score}</text>
+  <text x="259" y="49" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Arial,sans-serif" font-size="10" font-weight="800" fill="#fff">Grade {grade}</text>
 </svg>'''
     return Response(svg, media_type="image/svg+xml", headers={"Cache-Control": "public, max-age=3600"})
 
