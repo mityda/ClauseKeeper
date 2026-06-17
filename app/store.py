@@ -57,6 +57,19 @@ def init_db():
                 created_at TEXT
             )
         """)
+        # Verified compliance badges — each row is a real scan result that
+        # earns a tamper-proof, embeddable badge served by verification id.
+        c.execute("""
+            CREATE TABLE IF NOT EXISTS badges (
+                id TEXT PRIMARY KEY,
+                domain TEXT,
+                score INTEGER NOT NULL,
+                grade TEXT NOT NULL,
+                source TEXT,
+                created_at TEXT,
+                verified_at TEXT
+            )
+        """)
 
 
 # ---------------------------------------------------------------- users
@@ -192,3 +205,38 @@ def list_policies(limit: int = 50):
             "ORDER BY created_at DESC LIMIT ?", (limit,)
         ).fetchall()
         return [dict(r) for r in rows]
+
+
+# ---------------------------------------------------------------- verified badges
+def create_badge(score: int, grade: str, domain: str | None = None, source: str | None = None) -> str:
+    """Persist a real scan result so it can be served as a verified, unforgeable badge.
+
+    Returns the verification id used in the public badge URL (/badge/v/<id>.svg).
+    """
+    bid = secrets.token_urlsafe(9)
+    now = _now()
+    with _conn() as c:
+        c.execute(
+            "INSERT INTO badges (id, domain, score, grade, source, created_at, verified_at) "
+            "VALUES (?, ?, ?, ?, ?, ?, ?)",
+            (bid, domain, int(score), grade, source, now, now),
+        )
+    return bid
+
+
+def get_badge(bid: str):
+    if not bid:
+        return None
+    with _conn() as c:
+        row = c.execute("SELECT * FROM badges WHERE id = ?", (bid,)).fetchone()
+        if not row:
+            return None
+        return {
+            "id": row["id"],
+            "domain": row["domain"],
+            "score": row["score"],
+            "grade": row["grade"],
+            "source": row["source"],
+            "created_at": row["created_at"],
+            "verified_at": row["verified_at"],
+        }

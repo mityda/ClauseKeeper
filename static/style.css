@@ -35,3 +35,12 @@ form textarea,form input[type=text],form input[type=email]{width:100%;background
 @media print{.topbar,.site-footer,.doc-actions,.fine a,.btn,.toast{display:none!important}body{background:#fff;color:#000}.legal-doc .doc-body,.bundle-preview{box-shadow:none;border:0;padding:0}.alert.info{border:2px solid #000;background:#fff;color:#000}main{max-width:none;padding:0}.doc-body a{color:#000;text-decoration:underline}@page{margin:0.65in}}
 .badge-action{margin-top:12px}.badge-preview{display:grid;grid-template-columns:260px 1fr;gap:22px;align-items:center;margin:24px 0}.embed-box{width:100%;min-height:120px;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.9rem}.mini-steps{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:22px}.mini-step{background:#fff;border:1px solid var(--line);border-radius:16px;padding:16px;box-shadow:var(--shadow-soft)}
 @media(max-width:820px){.badge-preview,.mini-steps{grid-template-columns:1fr}}
+
+/* Badge education page — grading scale */
+.scale-grid{display:grid;gap:10px;margin-top:16px}
+.scale-row{display:flex;align-items:flex-start;gap:14px;padding:12px;border:1px solid var(--line);border-radius:14px;background:#fff}
+.scale-grade{flex:0 0 auto;width:42px;height:42px;border-radius:11px;color:#fff;font-weight:900;font-size:1.2rem;display:flex;align-items:center;justify-content:center}
+.scale-body{flex:1 1 auto}
+.scale-head{margin-bottom:2px}
+.credibility-note{background:#F0FBF7;border-color:#BFE9D8}
+@media(max-width:820px){.scale-grade{width:36px;height:36px}}

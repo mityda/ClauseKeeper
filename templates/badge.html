@@ -2,30 +2,48 @@
 {% block title %}Compliance Score Badge — ClauseKeeper{% endblock %}
 {% block content %}
 <section class="hero-card">
-  <span class="eyebrow">Free viral trust asset</span>
-  <h1>Put your compliance score on your site.</h1>
-  <p class="lede">The ClauseKeeper badge turns a scan result into a lightweight trust marker. Customers get proof-of-care; ClauseKeeper gets a natural backlink and referral loop.</p>
+  <span class="eyebrow">Verified trust marker</span>
+  <h1>The ClauseKeeper Compliance Badge</h1>
+  <p class="lede">A verified, tamper-proof trust marker you <strong>earn by scanning</strong> — not a graphic anyone can copy. It shows visitors your policies were independently checked against current 2026 standards, with the date of verification baked in.</p>
   <div class="cta-row">
-    <a class="btn btn-primary" href="/scan">Scan a policy first →</a>
-    <a class="btn btn-ghost" href="{{ badge_src }}">Open badge SVG</a>
+    <a class="btn btn-primary" href="/scan">Scan to earn your badge →</a>
+    <a class="btn btn-ghost" href="/pricing">See plans</a>
   </div>
 </section>
 
-<section class="card badge-preview">
-  <div>
-    <img src="{{ badge_src }}" alt="ClauseKeeper compliance score badge: {{ score }}/100 grade {{ grade }}" width="300" height="70">
-    <p class="fine">Preview: {{ score }}/100 · Grade {{ grade }}</p>
+<section class="card">
+  <h2>What it looks like</h2>
+  <p class="fine">Sample only — a real badge is issued after a scan and reads “Verified · &lt;date&gt;”.</p>
+  <div style="margin:18px 0;">
+    <img src="{{ sample_src }}" alt="Sample ClauseKeeper compliance badge: 92/100 grade A (sample)" width="300" height="70">
   </div>
-  <div>
-    <h2>Copy/paste embed code</h2>
-    <p class="fine">Use after a real scan. Update the score query string when you rescan.</p>
-    <textarea class="embed-box" readonly onclick="this.select()">{{ embed_code }}</textarea>
+  <p class="fine">Notice the <strong>SAMPLE</strong> marker. Only a verified badge — issued from a genuine scan and served from clausekeeper.app — carries the green “Verified” stamp. The score can’t be faked through the URL.</p>
+</section>
+
+<section class="card">
+  <h2>The grading scale</h2>
+  <p class="fine">Every scan scores your policy 0–100 across 11 clause categories (including 2026 AI-disclosure) and maps to a letter grade. Here’s what each grade implies:</p>
+  <div class="scale-grid">
+    {% for row in scale %}
+    <div class="scale-row">
+      <span class="scale-grade" style="background:{{ row.color }};">{{ row.grade }}</span>
+      <div class="scale-body">
+        <div class="scale-head"><strong>{{ row.label }}</strong> <span class="fine">· {{ row.range }}/100</span></div>
+        <p class="fine">{{ row.implies }}</p>
+      </div>
+    </div>
+    {% endfor %}
   </div>
 </section>
 
 <section class="mini-steps">
-  <div class="mini-step"><strong>1. Scan</strong><p>Run the free scanner against your current privacy policy or terms.</p></div>
-  <div class="mini-step"><strong>2. Embed</strong><p>Copy the badge into your footer, trust page, or compliance page.</p></div>
-  <div class="mini-step"><strong>3. Improve</strong><p>Use ClauseKeeper to fix stale or missing clauses and raise the score.</p></div>
+  <div class="mini-step"><strong>1. Scan</strong><p>Run the free scanner against your live privacy policy or terms.</p></div>
+  <div class="mini-step"><strong>2. Earn</strong><p>Your real result issues a verified badge with a unique link + date stamp.</p></div>
+  <div class="mini-step"><strong>3. Embed</strong><p>Add it to your footer or trust page. Rescan anytime to refresh the date.</p></div>
+</section>
+
+<section class="card credibility-note">
+  <h2>Why “verified” matters</h2>
+  <p class="fine">A trust badge anyone could copy with a perfect score would be worthless — and misleading. ClauseKeeper badges are issued only from genuine scans and served from our domain by a verification ID, so the score on the badge is always the score you actually earned. That’s what makes it worth displaying.</p>
 </section>
 {% endblock %}

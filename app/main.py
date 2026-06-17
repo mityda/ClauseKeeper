@@ -167,32 +167,61 @@ def about(request: Request):
 
 
 @app.get("/badge", response_class=HTMLResponse)
-def badge_builder(request: Request, score: int = 92):
-    """Landing/setup page for the embeddable compliance score badge."""
-    score = _normalize_badge_score(score)
-    grade = _badge_grade(score)
-    badge_src = f"/badge.svg?score={score}"
+def badge_builder(request: Request):
+    """Educational page: explains the badge, shows the grading scale, and a
+    clearly-labeled SAMPLE. The real embeddable badge is earned via a scan."""
+    scale = [
+        {"grade": "A", "range": "85–100", "color": _badge_color("A"),
+         "label": "Strong", "implies": "Current, thorough coverage incl. 2026 AI-disclosure. Minor freshness checks only."},
+        {"grade": "B", "range": "70–84", "color": _badge_color("B"),
+         "label": "Decent", "implies": "Solid foundation but missing some 2026-critical clauses."},
+        {"grade": "C", "range": "50–69", "color": _badge_color("C"),
+         "label": "Gaps", "implies": "Notable gaps — likely not fully 2026-compliant."},
+        {"grade": "D", "range": "30–49", "color": _badge_color("D"),
+         "label": "Weak", "implies": "Major clauses missing or outdated. Needs real work."},
+        {"grade": "F", "range": "0–29", "color": _badge_color("F"),
+         "label": "At risk", "implies": "Little to no compliant language detected."},
+    ]
     return templates.TemplateResponse(request, "badge.html", {
-        "score": score,
-        "grade": grade,
-        "badge_src": badge_src,
-        "embed_code": (
-            '<a href="https://clausekeeper.app/scan" aria-label="Scan your compliance with ClauseKeeper">'
-            f'<img src="https://clausekeeper.app/badge.svg?score={score}" '
-            f'alt="ClauseKeeper compliance score: {score}/100, grade {grade}" width="300" height="70">'
-            '</a>'
-        ),
+        "scale": scale,
+        "sample_src": "/badge.svg?sample=1&score=92",
     })
 
 
-@app.get("/badge.svg")
-def badge_svg(score: int = 92, label: str = "Compliance Score"):
-    """Zero-JS SVG badge that customers can embed on their own sites."""
+@app.post("/badge/mint")
+def badge_mint(request: Request, score: int = Form(...), source: str = Form("")):
+    """Mint a verified badge from a REAL scan result and return the embed code.
+
+    Called from the scan results page after an actual scan — the score is the
+    one our scanner produced, not a user-supplied value on a public URL.
+    """
     score = _normalize_badge_score(score)
     grade = _badge_grade(score)
+    domain = (source or "").strip()[:120] or None
+    bid = store.create_badge(score=score, grade=grade, domain=domain, source=domain)
+    badge_url = f"https://clausekeeper.app/badge/v/{bid}.svg"
+    embed_code = (
+        f'<a href="https://clausekeeper.app/scan" aria-label="Verified by ClauseKeeper">'
+        f'<img src="{badge_url}" '
+        f'alt="ClauseKeeper verified compliance score: {score}/100, grade {grade}" '
+        f'width="300" height="70"></a>'
+    )
+    return templates.TemplateResponse(request, "badge_minted.html", {
+        "score": score, "grade": grade, "badge_id": bid,
+        "badge_url": badge_url, "embed_code": embed_code,
+    })
+
+
+def _render_badge_svg(score: int, grade: str, *, sample: bool = False, verified_date: str | None = None) -> str:
+    """Build the badge SVG. Either a watermarked SAMPLE or a verified badge with a date."""
     color = _badge_color(grade)
-    safe_label = (label or "Compliance Score").replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")[:42]
-    svg = f'''<svg xmlns="http://www.w3.org/2000/svg" width="300" height="70" viewBox="0 0 300 70" role="img" aria-label="ClauseKeeper {safe_label}: {score} out of 100, grade {grade}">
+    if sample:
+        tag = "SAMPLE"
+    elif verified_date:
+        tag = f"Verified · {verified_date}"
+    else:
+        tag = "Verified"
+    return f'''<svg xmlns="http://www.w3.org/2000/svg" width="300" height="70" viewBox="0 0 300 70" role="img" aria-label="ClauseKeeper Compliance Score: {score} out of 100, grade {grade}{' (sample)' if sample else ''}">
   <defs>
     <linearGradient id="g" x1="0" x2="1" y1="0" y2="1"><stop stop-color="#2DD4BF"/><stop offset="1" stop-color="#14B8A6"/></linearGradient>
     <filter id="s" x="-20%" y="-20%" width="140%" height="140%"><feDropShadow dx="0" dy="6" stdDeviation="6" flood-color="#0B2237" flood-opacity=".14"/></filter>
@@ -200,13 +229,42 @@ def badge_svg(score: int = 92, label: str = "Compliance Score"):
   <rect x="2" y="2" width="296" height="66" rx="16" fill="#fff" stroke="#E2E8F0" filter="url(#s)"/>
   <circle cx="36" cy="35" r="20" fill="url(#g)"/>
   <path d="M27 35.5l6 6 12-14" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
-  <text x="66" y="26" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Arial,sans-serif" font-size="13" font-weight="700" fill="#5B7488">ClauseKeeper</text>
-  <text x="66" y="45" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Arial,sans-serif" font-size="16" font-weight="800" fill="#0B2237">{safe_label}</text>
+  <text x="66" y="25" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Arial,sans-serif" font-size="13" font-weight="700" fill="#5B7488">ClauseKeeper</text>
+  <text x="66" y="43" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Arial,sans-serif" font-size="15" font-weight="800" fill="#0B2237">Compliance Score</text>
+  <text x="66" y="57" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Arial,sans-serif" font-size="9" font-weight="700" fill="{'#B7791F' if sample else '#0F9F6E'}" letter-spacing=".3">{tag}</text>
   <rect x="232" y="12" width="54" height="46" rx="13" fill="{color}"/>
   <text x="259" y="34" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Arial,sans-serif" font-size="16" font-weight="900" fill="#fff">{score}</text>
   <text x="259" y="49" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Arial,sans-serif" font-size="10" font-weight="800" fill="#fff">Grade {grade}</text>
 </svg>'''
+
+
+@app.get("/badge.svg")
+def badge_svg(sample: int = 1, score: int = 92):
+    """Public badge endpoint — serves ONLY a watermarked SAMPLE for the education page.
+
+    Real, embeddable badges are unforgeable and served by verification id at
+    /badge/v/<id>.svg after an actual scan. Arbitrary ?score= can no longer mint
+    a 'verified'-looking badge.
+    """
+    score = _normalize_badge_score(score)
+    grade = _badge_grade(score)
+    svg = _render_badge_svg(score, grade, sample=True)
     return Response(svg, media_type="image/svg+xml", headers={"Cache-Control": "public, max-age=3600"})
+
+
+@app.get("/badge/v/{bid}.svg")
+def badge_verified_svg(bid: str):
+    """Serve a verified badge from a stored scan result. Tamper-proof: the score
+    comes from our DB, not the URL."""
+    rec = store.get_badge(bid)
+    if not rec:
+        # Unknown id → render an explicit 'unverified' marker, not a fake score.
+        svg = _render_badge_svg(0, "F", sample=True)
+        return Response(svg, media_type="image/svg+xml", status_code=404,
+                        headers={"Cache-Control": "no-store"})
+    date = (rec.get("verified_at") or "")[:10]
+    svg = _render_badge_svg(rec["score"], rec["grade"], verified_date=date)
+    return Response(svg, media_type="image/svg+xml", headers={"Cache-Control": "public, max-age=1800"})
 
 
 # ---------------------------------------------------------------- auth / billing

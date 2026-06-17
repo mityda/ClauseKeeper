@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block title %}Your Verified Badge — ClauseKeeper{% endblock %}
+{% block content %}
+<section class="hero-card">
+  <span class="eyebrow">Verified · issued just now</span>
+  <h1>Your compliance badge is ready.</h1>
+  <p class="lede">This badge is tied to your scan result (score {{ score }}/100, grade {{ grade }}) and served from clausekeeper.app. The score can’t be edited by changing the embed code — that’s what makes it credible.</p>
+</section>
+
+<section class="card badge-preview">
+  <div>
+    <img src="{{ badge_url }}" alt="Your verified ClauseKeeper badge: {{ score }}/100 grade {{ grade }}" width="300" height="70">
+    <p class="fine">Verification ID: {{ badge_id }}</p>
+  </div>
+  <div>
+    <h2>Copy/paste embed code</h2>
+    <p class="fine">Drop this in your footer, trust page, or compliance page.</p>
+    <textarea class="embed-box" readonly onclick="this.select()">{{ embed_code }}</textarea>
+    <p class="fine">Rescan anytime to issue a fresh badge with an updated date.</p>
+  </div>
+</section>
+
+<section class="mini-steps">
+  <div class="mini-step"><strong>Keep it honest</strong><p>If your policies change, rescan — the badge always reflects a real, dated result.</p></div>
+  <div class="mini-step"><strong>Raise your grade</strong><p><a href="/pricing">Subscribe</a> to generate updated, jurisdiction-aware documents and lift your score.</p></div>
+  <div class="mini-step"><strong>Share proof</strong><p>The badge links back to ClauseKeeper so visitors can verify the standard.</p></div>
+</section>
+{% endblock %}
