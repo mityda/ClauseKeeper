@@ -56,6 +56,17 @@ Then open http://127.0.0.1:8000
 Dependencies (installed via `uv add`): fastapi, uvicorn[standard], jinja2,
 python-multipart, httpx.
 
+### SEO content drafts
+
+ClauseKeeper has a zero-token content draft generator for long-tail compliance search queries:
+
+```bash
+python3 scripts/generate_seo_draft.py --list
+python3 scripts/generate_seo_draft.py          # writes the next unbuilt draft to content/drafts/
+```
+
+Drafts include front matter, target keyword, free-scanner CTA, FAQ copy, and JSON-LD FAQ schema for review before publication.
+
 ### Quick smoke test (curl)
 
 ```bash
