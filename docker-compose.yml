@@ -1,0 +1,17 @@
+services:
+  clausekeeper:
+    build: .
+    env_file:
+      - .env
+    environment:
+      CLAUSEKEEPER_DB: /data/clausekeeper.db
+      APP_BASE_URL: http://localhost:8000
+      PORT: 8000
+    ports:
+      - "8000:8000"
+    volumes:
+      - clausekeeper-data:/data
+    restart: unless-stopped
+
+volumes:
+  clausekeeper-data:

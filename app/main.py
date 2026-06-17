@@ -511,6 +511,7 @@ def hosted_doc(request: Request, pid: str, doc: str):
 
 
 # ---------------------------------------------------------------- JSON API (for tests/automation)
+@app.get("/health")
 @app.get("/api/health")
 def health():
     return {"status": "ok", "clause_version": CLAUSE_LIBRARY_VERSION,
