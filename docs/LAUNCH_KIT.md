@@ -95,3 +95,41 @@ Post the same r/selfhosted content to a Lemmy instance's selfhosted/opensource c
 
 Each issue: short description, point to the file, label `good first issue` + `help wanted`.
 This is THE step most people skip — pre-made issues are how you actually get contributions.
+
+---
+
+# Agent-Native Launch Track (GitHub Agent HQ + Cursor/Graphite)
+
+Research (mid-2026, CONFIRMED from official sources):
+- **Cursor's "forge"** = Cursor acquired **Graphite** (Dec 2025), a GitHub-synced
+  code-review/PR platform; **Cursor Cloud Agents in Graphite** (Mar 2026) let agents
+  open/review/merge PRs in-browser. It is NOT a standalone GitHub-replacement repo host
+  (as of this research). It works THROUGH GitHub PRs/issues — so good GitHub repo
+  conventions are what matter.
+- **GitHub Agent HQ** (Oct 2025): agents native to GitHub flow; Copilot coding agent
+  works assigned issues; reads AGENTS.md + .github/copilot-instructions.md.
+- **GitHub Copilot app** GA (Jun 2026): agent-native desktop, cloud automations.
+- **GitHub MCP Registry** (Sep 2025): MCP servers discovered + sorted by stars.
+- **Agent Finder / ARD** (Jun 2026): ranks AI resources from a curated catalog.
+
+## What we shipped to capitalize (DONE)
+- `AGENTS.md` (root) — full agent context: architecture, commands, constraints, do-not-touch.
+- `.github/copilot-instructions.md` — Copilot-cloud-agent focused.
+- `.github/instructions/clause-rules.instructions.md` — path-specific guidance.
+- `.github/pull_request_template.md` + `.github/ISSUE_TEMPLATE/good_first_issue.md`.
+
+## Launch-day agent-native levers (TODO during launch week)
+1. Create the 8 seed issues as **agent-assignable** (clear Goal/Files/Acceptance/Test).
+   Pin one: "Try assigning this to Copilot or opening it in Cursor."
+2. Add a README "Use with AI agents" section: "open in Cursor", "assign an issue to
+   Copilot", "agent context lives in AGENTS.md".
+3. **Evaluate `clausekeeper-mcp`** — an MCP server exposing scan/clause-check tools.
+   If built, publish → OSS MCP Community Registry → auto-appears in GitHub MCP Registry
+   (sorted by stars = launch-week star momentum compounds). HIGH-LEVERAGE, own track.
+4. Submit to GitHub Agent Finder / AI-resources catalog if submissions open.
+5. Ensure CI is fast + green (agents need fast feedback); add a GitHub Actions test workflow.
+6. Cross-post the build-in-public angle: "I made my OSS repo agent-native — assign an
+   issue to Copilot and watch it ship" (strong dev-twitter / HN hook).
+
+NOTE: No confirmed Cursor/Graphite public OSS discovery feed to exploit — GitHub remains
+the canonical launch surface. Don't move hosting; make the GitHub repo agent-perfect.
