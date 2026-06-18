@@ -1,0 +1,9 @@
+README.md
+pyproject.toml
+server.py
+clausekeeper_mcp.egg-info/PKG-INFO
+clausekeeper_mcp.egg-info/SOURCES.txt
+clausekeeper_mcp.egg-info/dependency_links.txt
+clausekeeper_mcp.egg-info/entry_points.txt
+clausekeeper_mcp.egg-info/requires.txt
+clausekeeper_mcp.egg-info/top_level.txt

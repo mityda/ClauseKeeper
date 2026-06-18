@@ -1,0 +1,21 @@
+[project]
+name = "clausekeeper-mcp"
+version = "0.1.0"
+description = "MCP server exposing ClauseKeeper's deterministic compliance scanner to agents."
+readme = "README.md"
+requires-python = ">=3.11"
+license = { text = "AGPL-3.0-or-later" }
+authors = [{ name = "ClauseKeeper contributors" }]
+dependencies = [
+    "mcp>=1.0.0",
+]
+
+[project.scripts]
+clausekeeper-mcp = "server:main"
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+py-modules = ["server"]

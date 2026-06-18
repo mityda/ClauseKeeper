@@ -1,0 +1,2 @@
+[console_scripts]
+clausekeeper-mcp = server:main
