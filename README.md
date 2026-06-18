@@ -79,6 +79,31 @@ Prefer running it without Docker? See the [contributing guide](CONTRIBUTING.md) 
 
 ---
 
+## 🤖 Use with AI agents
+
+ClauseKeeper is **agent-native** — built to be worked on (and used) by AI coding agents.
+
+**Work on the repo with an agent:**
+- **GitHub Copilot:** assign any [open issue](../../issues) to the Copilot coding agent — it reads [`AGENTS.md`](AGENTS.md) and `.github/copilot-instructions.md`, makes the change, runs the tests, and opens a PR.
+- **Cursor:** open the repo in Cursor and point a Cloud Agent at an issue — the same `AGENTS.md` context applies.
+- Agent context, architecture, and exact build/test commands all live in [`AGENTS.md`](AGENTS.md).
+
+**Use ClauseKeeper *from* an agent (MCP):**
+We ship an [MCP server](mcp/) that exposes the compliance scanner as agent tools — so Claude, Cursor, or any MCP host can scan a privacy policy and get a score + missing-clause checklist. No API keys, runs locally.
+
+```jsonc
+// add to your MCP host config (e.g. Claude Desktop / Cursor)
+{
+  "mcpServers": {
+    "clausekeeper": { "command": "clausekeeper-mcp" }
+  }
+}
+```
+
+Tools: `scan_policy_text`, `scan_policy_url`, `list_clause_rules`. See [mcp/README.md](mcp/README.md).
+
+---
+
 ## 🤝 Contributing
 
 PRs welcome — this is a community project. Good first contributions:
