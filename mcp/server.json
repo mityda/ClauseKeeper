@@ -1,7 +1,7 @@
 {
   "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
   "name": "io.github.mityda/clausekeeper",
-  "description": "Scan website legal documents (privacy policy, terms, cookie, AI-disclosure) for missing or stale clauses and get a 0-100 compliance score. Deterministic, rule-based, no LLM.",
+  "description": "Scan website legal docs for missing or stale compliance clauses. Rule-based, no LLM.",
   "title": "ClauseKeeper Compliance Scanner",
   "websiteUrl": "https://clausekeeper.app",
   "repository": {
@@ -9,13 +9,13 @@
     "source": "github",
     "subfolder": "mcp"
   },
-  "version": "0.1.0",
+  "version": "0.1.1",
   "packages": [
     {
       "registryType": "pypi",
       "registryBaseUrl": "https://pypi.org",
       "identifier": "clausekeeper-mcp",
-      "version": "0.1.0",
+      "version": "0.1.1",
       "runtimeHint": "uvx",
       "transport": {
         "type": "stdio"

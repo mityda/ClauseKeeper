@@ -1,5 +1,8 @@
 # ClauseKeeper MCP Server
 
+<!-- mcp-name: io.github.mityda/clausekeeper -->
+mcp-name: io.github.mityda/clausekeeper
+
 `clausekeeper-mcp` exposes [ClauseKeeper](../README.md)'s deterministic compliance scanner as Model Context Protocol (MCP) tools for Claude Desktop, Cursor, and other MCP hosts.
 
 It is a thin wrapper around a vendored copy of the real ClauseKeeper scanner in `clausekeeper_core/scanner.py` and rule library in `clausekeeper_core/clause_rules.py`:
