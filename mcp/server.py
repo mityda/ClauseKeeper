@@ -2,26 +2,17 @@
 
 Exposes the deterministic ClauseKeeper compliance scanner as Model Context
 Protocol tools. This module intentionally keeps wrappers thin and delegates all
-scoring to app.scanner.scan_text.
+scoring to the vendored ClauseKeeper scanner core.
 """
 from __future__ import annotations
 
 import re
-import sys
 import urllib.request
-from pathlib import Path
 from typing import Any
 
+from clausekeeper_core.clause_rules import CLAUSE_RULES, MAX_RAW_SCORE
+from clausekeeper_core.scanner import html_to_text, scan_text
 from mcp.server.fastmcp import FastMCP
-
-# Allow this standalone MCP package (repo/mcp/server.py) to import the parent
-# ClauseKeeper app package without requiring the main app to be installed.
-_REPO_ROOT = Path(__file__).resolve().parents[1]
-if str(_REPO_ROOT) not in sys.path:
-    sys.path.insert(0, str(_REPO_ROOT))
-
-from app.clause_rules import CLAUSE_RULES, MAX_RAW_SCORE  # noqa: E402
-from app.scanner import html_to_text, scan_text  # noqa: E402
 
 USER_AGENT = "ClauseKeeperMCP/0.1 (+https://github.com/)"
 MAX_FETCH_BYTES = 2_000_000
