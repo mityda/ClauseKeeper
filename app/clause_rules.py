@@ -38,6 +38,18 @@ CLAUSE_RULES = [
         "fix": "Add a GDPR section covering lawful basis, the 8 data-subject rights, and EU representative/contact.",
     },
     {
+        "key": "app_australia",
+        "label": "Australian Privacy Principles (APP)",
+        "category": "Privacy regimes",
+        "weight": 10,
+        "signals": [
+            "APP entity","interference with the privacy","government related identifier","solicited personal information","unsolicited personal information","cross-border disclosure of personal information","privacy act 1988"
+        ],
+        "stale_signals": ["APP privacy policy","reasonable steps","open and transparent management","anonymity and pseudonymity"],
+        "why": "The Australian Privacy Act requires transparent handling, security, and disclosure of personal information.",
+        "fix": "Add an 'APP Privacy Policy' section covering data management, cross-border transfers, and user access rights.",
+    },
+    {
         "key": "ccpa",
         "label": "CCPA/CPRA (California) rights",
         "category": "Privacy regimes",
