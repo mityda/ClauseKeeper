@@ -9,7 +9,10 @@ Status per clause:
   needs_update  -> signals found BUT stale_signals defined and none matched (STALE)
   missing       -> no signals found
 """
+import argparse
+import json
 import re
+import sys
 from html.parser import HTMLParser
 
 from .clause_rules import CLAUSE_RULES, MAX_RAW_SCORE
@@ -129,3 +132,42 @@ def scan_text(raw_text: str) -> dict:
         "by_category": by_category,
         "missing_or_stale": [r for r in results if r["status"] != "present"],
     }
+
+
+def _build_parser() -> argparse.ArgumentParser:
+    parser = argparse.ArgumentParser(description="Run the ClauseKeeper scanner on raw policy text.")
+    parser.add_argument("text", nargs="?", help="Policy text to scan. If omitted, stdin is used.")
+    parser.add_argument("--json", action="store_true", dest="as_json",
+                        help="Print the full scorecard as JSON.")
+    return parser
+
+
+def _read_cli_text(args: argparse.Namespace) -> str:
+    if args.text:
+        return args.text
+
+    stdin_text = sys.stdin.read()
+    if stdin_text.strip():
+        return stdin_text
+
+    raise SystemExit("Provide policy text as an argument or via stdin.")
+
+
+def main(argv: list[str] | None = None) -> int:
+    parser = _build_parser()
+    args = parser.parse_args(argv)
+    result = scan_text(_read_cli_text(args))
+
+    if args.as_json:
+        print(json.dumps(result))
+        return 0
+
+    print(f"Score: {result['score_100']}/100 (Grade {result['grade']})")
+    print(result["verdict"])
+    for item in result["missing_or_stale"]:
+        print(f"- {item['label']}: {item['status']}")
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

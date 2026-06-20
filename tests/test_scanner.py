@@ -1,4 +1,8 @@
 """(a) The free scanner still works."""
+import json
+import subprocess
+import sys
+
 from app.scanner import scan_text, html_to_text
 
 
@@ -35,3 +39,18 @@ def test_health_endpoint(client):
     body = resp.json()
     assert body["status"] == "ok"
     assert body["stripe_enabled"] is False
+
+
+def test_scanner_cli_json_output():
+    completed = subprocess.run(
+        [sys.executable, "-m", "app.scanner", "--json"],
+        input="We collect your email address. You can request deletion. GDPR.",
+        text=True,
+        capture_output=True,
+        check=True,
+    )
+
+    body = json.loads(completed.stdout)
+    assert "score_100" in body
+    assert isinstance(body["results"], list)
+    assert body["counts"]["total"] > 0
