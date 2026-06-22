@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block title %}Admin Stats — ClauseKeeper{% endblock %}
+{% block content %}
+<section class="stats-page">
+  <p class="eyebrow">Private launch analytics</p>
+  <h1>ClauseKeeper stats</h1>
+  <p class="lede">Server-side, first-party events only. No cookies, no client-side tracker, no raw IP storage.</p>
+
+  <div class="stats-grid">
+    {% for key, period in periods.items() %}
+    <article class="plan stats-card">
+      <h2>{{ period.label }}</h2>
+      <div class="metric-grid">
+        <div><strong>{{ period.page_views }}</strong><span>Page views</span></div>
+        <div><strong>{{ period.unique_visitors }}</strong><span>Unique visitors</span></div>
+        <div><strong>{{ period.scans_completed }}</strong><span>Scans completed</span></div>
+        <div><strong>{{ period.checkouts_started }}</strong><span>Checkouts started</span></div>
+      </div>
+      <h3>Funnel</h3>
+      <ol class="funnel-list">
+        <li><strong>{{ period.funnel.scan_completed }}</strong> scans completed</li>
+        <li><strong>{{ period.funnel.pricing_page_views }}</strong> pricing page views <span class="fine">({{ period.funnel.pricing_from_scan_pct }}% of scans)</span></li>
+        <li><strong>{{ period.funnel.checkout_started }}</strong> checkouts started <span class="fine">({{ period.funnel.checkout_from_pricing_pct }}% of pricing views; {{ period.funnel.checkout_from_scan_pct }}% of scans)</span></li>
+      </ol>
+    </article>
+    {% endfor %}
+  </div>
+</section>
+{% endblock %}

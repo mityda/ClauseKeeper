@@ -33,6 +33,7 @@ from .scanner import scan_text, html_to_text
 from .generator import generate_documents, CLAUSE_LIBRARY_VERSION, CLAUSE_CHANGELOG, DISCLAIMER
 from . import store
 from . import auth
+from . import analytics
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 templates = Jinja2Templates(directory=os.path.join(BASE_DIR, "templates"))
@@ -81,6 +82,7 @@ def _badge_color(grade: str) -> str:
 @app.on_event("startup")
 def _startup():
     store.init_db()
+    analytics.init_db()
 
 
 # ---------------------------------------------------------------- helpers
@@ -110,6 +112,7 @@ async def _fetch_url_text(url: str) -> str:
 # ---------------------------------------------------------------- pages
 @app.get("/", response_class=HTMLResponse)
 def landing(request: Request):
+    analytics.record_event(request, "page_view")
     user = _user(request)
     return templates.TemplateResponse(request, "landing.html", {
         "subscribed": bool(user and user["subscribed"]),
@@ -121,6 +124,7 @@ def landing(request: Request):
 
 @app.get("/scan", response_class=HTMLResponse)
 def scan_form(request: Request):
+    analytics.record_event(request, "page_view")
     return templates.TemplateResponse(request, "scan.html", {"result": None})
 
 
@@ -141,6 +145,11 @@ async def scan_run(request: Request, mode: str = Form("text"),
         source = "pasted text"
 
     result = scan_text(raw) if raw and not error else None
+    if result:
+        analytics.record_event(request, "scan_completed", {
+            "score": result.get("score_100"),
+            "grade": result.get("grade"),
+        })
     return templates.TemplateResponse(request, "scan.html", {
         "result": result, "error": error,
         "source": source, "submitted_text": policy_text, "submitted_url": url,
@@ -149,6 +158,7 @@ async def scan_run(request: Request, mode: str = Form("text"),
 
 @app.get("/pricing", response_class=HTMLResponse)
 def pricing(request: Request):
+    analytics.record_event(request, "page_view")
     user = _user(request)
     return templates.TemplateResponse(request, "pricing.html", {
         "subscribed": bool(user and user["subscribed"]),
@@ -329,6 +339,7 @@ def subscribe(request: Request, email: str = Form(""), plan: str = Form("annual"
             email = (email or "").strip().lower() or "dev@example.com"
             user = store.upsert_user(email)
         store.set_subscribed(user["id"], True, PLAN)
+        analytics.record_event(request, "checkout_started", {"plan": plan, "mode": "dev"})
         resp = RedirectResponse("/generate", status_code=303)
         auth.set_session_cookie(resp, user["id"])
         return resp
@@ -351,7 +362,27 @@ def subscribe(request: Request, email: str = Form(""), plan: str = Form("annual"
         kwargs["customer_email"] = email
 
     session = stripe.checkout.Session.create(**kwargs)
+    analytics.record_event(request, "checkout_started", {"plan": plan, "mode": "stripe"})
     return RedirectResponse(session.url, status_code=303)
+
+
+def _stats_authorized(token: str) -> bool:
+    expected = os.environ.get("STATS_TOKEN", "")
+    return bool(expected) and token == expected
+
+
+@app.get("/admin/stats", response_class=HTMLResponse)
+def admin_stats(request: Request, token: str = ""):
+    if not _stats_authorized(token):
+        raise HTTPException(status_code=404, detail="Not found")
+    return templates.TemplateResponse(request, "stats.html", analytics.stats_summary())
+
+
+@app.get("/admin/stats.json")
+def admin_stats_json(token: str = ""):
+    if not _stats_authorized(token):
+        raise HTTPException(status_code=404, detail="Not found")
+    return JSONResponse(analytics.stats_summary())
 
 
 @app.get("/success", response_class=HTMLResponse)
