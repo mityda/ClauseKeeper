@@ -5,12 +5,26 @@ services:
   - type: web
     name: clausekeeper
     runtime: python
-    plan: free
+    # NOTE: persistent disks require a paid instance type on Render.
+    # 'free' does NOT support disks (and sleeps after 15 min idle, wiping the FS).
+    # 'starter' (~$7/mo) keeps the service always-on AND persists the DB below.
+    plan: starter
     buildCommand: "pip install -r requirements.txt"
     startCommand: "uvicorn app.main:app --host 0.0.0.0 --port $PORT"
+    disk:
+      name: clausekeeper-data
+      mountPath: /var/data
+      sizeGB: 1
     envVars:
       - key: PYTHON_VERSION
         value: "3.11.9"
+      # SQLite lives on the persistent disk so users/subscriptions/analytics
+      # survive redeploys and restarts.
+      - key: CLAUSEKEEPER_DB
+        value: "/var/data/clausekeeper.db"
+      # Stats dashboard token — set the real value in the Render dashboard.
+      - key: STATS_TOKEN
+        sync: false
       # Add real Stripe keys here (or in the Render dashboard) when going paid:
       # - key: STRIPE_SECRET_KEY
       #   sync: false
