@@ -119,6 +119,94 @@ For local/open-source self-hosting, leave Stripe variables blank. To run a produ
 
 When `STRIPE_SECRET_KEY` is set, `/subscribe` creates real Stripe Checkout Sessions instead of using the local no-Stripe flow.
 
+## Deploying to Fly.io
+
+Fly.io can deploy this repo directly from the existing `Dockerfile`. Because ClauseKeeper stores its default SQLite database at `/data/clausekeeper.db`, treat the default self-hosted setup as a single-machine app unless you replace SQLite with a networked database.
+
+1. Install `flyctl`, then authenticate:
+
+   ```bash
+   fly auth login
+   ```
+
+2. From the repository root, create the app config without deploying yet:
+
+   ```bash
+   fly launch --no-deploy
+   ```
+
+   Accept the Dockerfile-based deploy flow when prompted.
+
+3. Create a persistent volume for the SQLite database in your primary region:
+
+   ```bash
+   fly volumes create clausekeeper_data --region <primary-region> --size 1
+   ```
+
+4. Update the generated `fly.toml` so the app keeps the same runtime assumptions as `docker-compose.yml`:
+
+   - mount the volume at `/data`
+   - set `APP_BASE_URL` to your Fly hostname, for example `https://your-app.fly.dev`
+   - set `CLAUSEKEEPER_DB=/data/clausekeeper.db`
+   - keep the internal port at `8000`
+
+   Minimal mount block:
+
+   ```toml
+   [[mounts]]
+     source = "clausekeeper_data"
+     destination = "/data"
+   ```
+
+5. Set the required secret:
+
+   ```bash
+   fly secrets set APP_SECRET_KEY="$(python -c 'import secrets; print(secrets.token_urlsafe(32))')"
+   ```
+
+6. Deploy:
+
+   ```bash
+   fly deploy
+   ```
+
+7. Verify the running app:
+
+   ```bash
+   fly status
+   fly logs
+   curl -i https://<your-app>.fly.dev/health
+   ```
+
+If you later enable billing, add the `STRIPE_*` values with `fly secrets set ...` and redeploy.
+
+## Deploying to Railway
+
+Railway can build this repo from the checked-in `Dockerfile`. The important part is attaching a persistent volume at `/data`, because Railway's default service filesystem is ephemeral across deployments.
+
+1. Push your fork or branch to GitHub.
+2. In Railway, create a new project and deploy the GitHub repo.
+3. Open the service's Variables tab and add the self-hosting values from `.env.example`:
+
+   - `APP_SECRET_KEY` with a long random value
+   - `APP_BASE_URL` with the Railway public domain once it is assigned
+   - `CLAUSEKEEPER_DB=/data/clausekeeper.db`
+   - `PORT=8000`
+   - leave `STRIPE_*` blank unless you are enabling paid billing
+
+4. In the service Settings tab, add a Volume mounted at `/data`.
+5. In the service Networking tab, generate a public domain.
+6. Add a health check pointing at `/health` so deploys verify the app booted cleanly.
+7. Redeploy if Railway does not automatically trigger one after the variable and volume changes.
+8. Verify the app:
+
+   ```bash
+   curl -i https://<your-railway-domain>/health
+   curl -I https://<your-railway-domain>/scan
+   ```
+
+As with Fly.io, the default SQLite setup is best kept to a single running instance. If you need horizontal scaling, move persistence off local SQLite first.
+
 ## Local smoke tests
 
 With the container running:
