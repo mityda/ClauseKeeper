@@ -10,3 +10,6 @@ policyfresh.db
 *.db
 .pytest_cache/
 .DS_Store
+
+# Stock/cover images (uploaded to dev.to directly, not served from repo)
+content/assets/
