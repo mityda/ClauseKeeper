@@ -67,6 +67,16 @@ def scan_text(raw_text: str) -> dict:
         has_signal = _contains_any(text, rule["signals"])
         stale_signals = rule.get("stale_signals")
 
+        # If a 'last updated' signal was found, verify a date actually exists in the text
+        if rule["key"] == "last_updated" and has_signal:
+            has_date = bool(
+                re.search(r"\b(19|20)\d{2}\b", text) or
+                re.search(r"\b(?:jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)", text) or
+                re.search(r"\b\d{1,2}[/-]\d{1,2}[/-]\d{2,4}\b", text)
+            )
+            if not has_date:
+                has_signal = False
+
         if not has_signal:
             status = "missing"
             earned = 0
