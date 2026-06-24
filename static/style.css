@@ -45,3 +45,40 @@ form textarea,form input[type=text],form input[type=email]{width:100%;background
 .scale-head{margin-bottom:2px}
 .credibility-note{background:#F0FBF7;border-color:#BFE9D8}
 @media(max-width:820px){.scale-grade{width:36px;height:36px}}
+
+@media(prefers-color-scheme:dark){
+  :root{
+    --bg:#0D1117;
+    --ink:#E6EDF3;
+    --muted:#8B949E;
+    --teal:#2DD4BF;
+    --teal-bright:#14B8A6;
+    --teal-soft:#0D2E2A;
+    --line:#30363D;
+    --panel:#161B22;
+    --panel-soft:#0D1117;
+    --ok:#3FB950;
+    --warn:#D29922;
+    --bad:#F85149;
+    --shadow:0 18px 45px rgba(0,0,0,.4);
+    --shadow-soft:0 10px 24px rgba(0,0,0,.3);
+    --gradient:linear-gradient(135deg,var(--teal-bright),var(--teal));
+  }
+  html{background:var(--bg)}
+  body{background:radial-gradient(circle at 15% 0%,rgba(20,184,166,.08),transparent 30%),var(--bg)}
+  .topbar{background:rgba(13,17,23,.92)}
+  .hero-card{background:linear-gradient(180deg,var(--panel),var(--panel-soft))}
+  .update-pill,.scan-form,.gen-form,.plan,.doc-card,.mini-step,.scale-row,.checklist li,.billing-option,.score-header,.card{background:var(--panel)}
+  .btn-ghost{background:var(--panel);color:var(--ink)}
+  form textarea,form input[type=text],form input[type=email]{background:var(--panel);color:var(--ink)}
+  .auth-card{background:rgba(22,27,34,.88)}
+  .auth-gate{background:linear-gradient(135deg,var(--panel),#0D2E2A)}
+  .doc-silhouette{background:var(--panel)}
+  .doc-silhouette:before,.doc-silhouette:after,.doc-silhouette .line{background:#30363D}
+  .upsell{background:linear-gradient(135deg,#0D2E2A,var(--panel))}
+  .legal-doc .doc-body,.bundle-preview{background:var(--panel);color:var(--ink)}
+  .toast{background:var(--ink);color:var(--bg)}
+  .alert{background:#2D1A0E;border-color:#7C4A1E;color:#FDBA74}
+  .alert.info{background:var(--teal-soft);border-color:rgba(45,212,191,.3);color:var(--ink)}
+  .credibility-note{background:#0D2E2A;border-color:#1A4A3A}
+}
