@@ -35,3 +35,8 @@ def test_health_endpoint(client):
     body = resp.json()
     assert body["status"] == "ok"
     assert body["stripe_enabled"] is False
+def test_app_australia_detection():
+    test_text = "This is an APP entity document. We follow the Privacy Act 1988."
+    result = scan_text(test_text)
+    found_keys = [r["key"] for r in result["results"]]
+    assert "app_australia" in found_keys
